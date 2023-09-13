@@ -1,8 +1,28 @@
 from rest_framework import viewsets
 
-from recipes.models import Recipe, User
+from recipes.models import Recipe, User, Tag, Ingredient
 
-from .serializers import RecipeSerializer, UserSerializer
+from .serializers import RecipeSerializer, UserSerializer, IngredientSerializer, TagSerializer
+
+
+
+class TagViewSet(viewsets.ModelViewSet):
+    """
+    Вьюсет тегов
+    """
+    queryset = Tag.objects.all()
+    serializer_class = TagSerializer
+
+
+class IngredientViewSet(viewsets.ModelViewSet):
+    """
+    Вьюсет ингредиентов
+    """
+    queryset = Ingredient.objects.all()
+    serializer_class = IngredientSerializer
+    # filter_backends = (filters.SearchFilter,)
+    search_fields = ('name',)
+
 
 class RecipeViewSet(viewsets.ModelViewSet):
     queryset = Recipe.objects.all()
@@ -12,4 +32,5 @@ class RecipeViewSet(viewsets.ModelViewSet):
 class UserViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+
 
