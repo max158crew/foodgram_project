@@ -1,15 +1,21 @@
 from rest_framework import serializers
 
-from recipes.models import Recipe, Ingredient, IngredientRecipe
+from recipes.models import Recipe, Ingredient, IngredientRecipe, User
+
+
+class UserSerializer(serializers.ModelSerializer):
+    recipes = serializers.StringRelatedField(many=True, read_only=True)
+
+    class Meta:
+        model = User
+        fields = ('id', 'username', 'first_name', 'last_name', 'recipes')
 
 
 class IngredientSerializer(serializers.ModelSerializer):
 
-
     class Meta:
         model = Ingredient
         fields = ('id', 'name', 'measure')
-
 
 
 class RecipeSerializer(serializers.ModelSerializer):
@@ -17,8 +23,7 @@ class RecipeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Recipe
-        fields = ('id', 'name', 'author', 'text', 'ingredients')
-
+        fields = ('id', 'name', 'owner', 'text', 'ingredients')
 
     def create(self, validated_data):
         if 'ingredients' not in self.initial_data:
@@ -30,4 +35,3 @@ class RecipeSerializer(serializers.ModelSerializer):
             current_ingredient, status = Ingredient.objects.get_or_create(**ingredient)
             IngredientRecipe.objects.create(ingredient=current_ingredient, recipe=recipe)
         return recipe
-
