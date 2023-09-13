@@ -2,6 +2,8 @@ from django.db import models
 from django.contrib.auth import get_user_model
 from django.core.validators import MinValueValidator, RegexValidator
 
+from colorfield.fields import ColorField
+
 User = get_user_model()
 
 class Tag(models.Model):
@@ -25,7 +27,7 @@ class Tag(models.Model):
         verbose_name="Название тэга",
         validators=[name_validator]
         )
-    color = models.ColorField(format="hex",
+    color = ColorField(format="hex",
                        verbose_name="Цветовой код",
                        validators=[color_validator]
                        )
