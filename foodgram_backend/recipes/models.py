@@ -3,8 +3,11 @@ from django.contrib.auth import get_user_model
 from django.core.validators import MinValueValidator, RegexValidator
 
 from colorfield.fields import ColorField
+from users.models import User
 
-User = get_user_model()
+# User = get_user_model()
+
+
 
 class Tag(models.Model):
     """
