@@ -3,6 +3,7 @@ from rest_framework import viewsets
 from recipes.models import Recipe, User, Tag, Ingredient
 
 from .serializers import RecipeSerializer, UserSerializer, IngredientSerializer, TagSerializer
+from .permissions import IsAdminOrAuthorOrReadOnlyPermission
 
 
 
@@ -20,6 +21,7 @@ class IngredientViewSet(viewsets.ModelViewSet):
     """
     queryset = Ingredient.objects.all()
     serializer_class = IngredientSerializer
+    permission_classes = (IsAdminOrAuthorOrReadOnlyPermission, )
     # filter_backends = (filters.SearchFilter,)
     search_fields = ('name',)
 
