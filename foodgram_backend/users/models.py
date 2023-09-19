@@ -27,8 +27,6 @@ class User(AbstractUser):
 
     class Meta:
         ordering = ("id",)
-        verbose_name = "Пользователь"
-        verbose_name_plural = "Пользователи"
         constraints = [models.CheckConstraint(check=~models.Q(
             username__iexact="me"), name="username_is_not_me")]
 
@@ -45,16 +43,12 @@ class Follow(models.Model):
         User,
         on_delete=models.CASCADE,
         related_name="follower",
-        verbose_name="Подписчик",
     )
     author = models.ForeignKey(
         User, on_delete=models.CASCADE,
-        related_name="following",
-        verbose_name="Блогер")
+        related_name="following")
 
     class Meta:
-        verbose_name = "Подписка"
-        verbose_name_plural = "Подписки"
         constraints = [
             models.UniqueConstraint(
                 fields=["user", "author"], name="unique_follow"),

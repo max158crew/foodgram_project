@@ -45,22 +45,39 @@ class Tag(models.Model):
         return self.slug
 
 class Ingredient(models.Model):
-    name = models.CharField(max_length=128)
-    measure = models.CharField(max_length=64)
+
+    name = models.CharField(
+        max_length=200, verbose_name="Название ингредиента", db_index=True)
+    measurement_unit = models.CharField(
+        max_length=60, verbose_name="Единица измерения")
+
 
     def __str__(self):
-        return self.name
+        return f"{self.name}, {self.measurement_unit}"
 
 class Recipe(models.Model):
     name = models.CharField(
-        max_length=200,
-        verbose_name="Название рецепта",
+        max_length=128,
+        verbose_name="Название",
     )
     owner = models.ForeignKey(
         User, related_name='recipes', on_delete=models.CASCADE
     )
     text = models.TextField()
     ingredients = models.ManyToManyField(Ingredient, through='IngredientRecipe')
+    image = models.ImageField(
+        verbose_name="Фото", blank=True, upload_to="recipes/images")
+    tags = models.ManyToManyField(
+        Tag,
+        verbose_name="Тэги",
+    )
+    pub_date = models.DateTimeField(
+        verbose_name="Дата публикации", auto_now_add=True)
+    cooking_time = models.PositiveSmallIntegerField(
+        validators=[MinValueValidator(
+            1 , message="Время приготовления должно быть не менее 1 минуты!")],
+        verbose_name="Время приготовления, мин.",
+    )
 
     def __str__(self):
         return self.name
@@ -73,8 +90,28 @@ class IngredientRecipe(models.Model):
         return f'{self.ingredient} {self.recipe}'
 
 class Cart(models.Model):
-    pass
+
+
+    recipe = models.ForeignKey(
+        Recipe,
+        on_delete=models.CASCADE,
+    )
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+    )
+
 
 class Favorite(models.Model):
-    pass
+
+    recipe = models.ForeignKey(
+        Recipe,
+        related_name="in_favorited",
+        on_delete=models.CASCADE,
+    )
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+    )
+
 
