@@ -12,13 +12,12 @@ from users.models import Follow, User
 
 from .serializers import RecipeSerializer, UserSerializer, IngredientSerializer, TagSerializer, FollowersSerializer, FollowSerializer
 from .permissions import IsAdminOrAuthorOrReadOnlyPermission
+from .pagination import RecipePagination
 
 
 class UsersViewSet(UserViewSet):
-    """
-    Юзер вьюсет с добавлением ендпоинтов для подписок, кастомной пагинацией
-    """
-    # pagination_class = RecipePagination
+
+    pagination_class = RecipePagination
 
     @action(['GET'], detail=False, permission_classes=[IsAuthenticated])
     def me(self, request, *args, **kwargs):
