@@ -53,7 +53,7 @@ class Ingredient(models.Model):
 
 class Recipe(models.Model):
     name = models.CharField(
-        max_length=128,
+        max_length=200,
         verbose_name="Название",
     )
     author = models.ForeignKey(

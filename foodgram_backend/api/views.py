@@ -60,17 +60,13 @@ class UsersViewSet(UserViewSet):
 
 
 class TagViewSet(viewsets.ModelViewSet):
-    """
-    Вьюсет тегов
-    """
+
     queryset = Tag.objects.all()
     serializer_class = TagSerializer
 
 
 class IngredientViewSet(viewsets.ModelViewSet):
-    """
-    Вьюсет ингредиентов
-    """
+
     queryset = Ingredient.objects.all()
     serializer_class = IngredientSerializer
     permission_classes = (IsAdminOrAuthorOrReadOnlyPermission, )
