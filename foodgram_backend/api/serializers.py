@@ -7,6 +7,23 @@ from rest_framework.exceptions import ValidationError
 from recipes.models import Recipe, Ingredient, IngredientRecipe, Tag
 from users.models import Follow, User
 
+class SignUpSerializer(serializers.ModelSerializer):
+    """Сериализатор для регистрации пользователей."""
+    username = serializers.CharField(
+        max_length=150, required=True
+    )
+    email = serializers.EmailField(
+        max_length=254,
+        required=True,
+    )
+    first_name = serializers.CharField(max_length=150, required=True)
+    last_name = serializers.CharField(max_length=150, required=True)
+    password = serializers.CharField(max_length=150, required=True)
+
+    class Meta:
+        fields = ('username', 'email', 'first_name', "last_name", 'password')
+        model = User
+
 
 class UsersSerializer(UserSerializer):
     """
