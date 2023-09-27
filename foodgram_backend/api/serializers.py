@@ -13,7 +13,6 @@ class TokenSerializer(serializers.Serializer):
     email = serializers.EmailField()
 
 
-
 class UsersSerializer(UserSerializer):
     """
     Сериализатор пользователя с отметкой о подписке

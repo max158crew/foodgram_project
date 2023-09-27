@@ -35,11 +35,11 @@ def token_jwt(request):
         )
         print(user.username)
         print(user.password)
-        if not default_token_generator.check_token(user, request.data.get('password')):
-            return Response(
-                'Неверный код',
-                status=HTTPStatus.BAD_REQUEST
-            )
+        # if not default_token_generator.check_token(user, request.data.get('password')):
+        #     return Response(
+        #         'Неверный код',
+        #         status=HTTPStatus.BAD_REQUEST
+        #     )
         token = {'auth_token': str(AccessToken.for_user(user))}
         return Response(token, status=HTTPStatus.OK)
     return Response(serializer.errors, status=HTTPStatus.BAD_REQUEST)
