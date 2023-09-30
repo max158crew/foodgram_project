@@ -3,7 +3,7 @@ from import_export import resources
 from import_export.admin import ImportExportModelAdmin
 
 from .models import (Favorite, Ingredient, IngredientRecipe, Recipe,
-                     Cart, Tag)
+                     ShoppingCart, Tag)
 
 
 class IngredientsInRecipeAdmin(admin.TabularInline):
@@ -38,9 +38,7 @@ class IngredientResource(resources.ModelResource):
 
 @admin.register(Ingredient)
 class IngredientAdmin(ImportExportModelAdmin):
-    """
-    Панель админа для редактирования ингредиентов
-    """
+
 
     resource_class = IngredientResource
     list_display = (
@@ -56,9 +54,7 @@ class IngredientAdmin(ImportExportModelAdmin):
 
 @admin.register(Recipe)
 class RecipeAdmin(admin.ModelAdmin):
-    """
-    Панель админа для редактирования рецептов
-    """
+
 
     list_display = (
         "name",
@@ -99,7 +95,7 @@ class FavoriteAdmin(admin.ModelAdmin):
     empty_value_display = "-пусто-"
 
 
-@admin.register(Cart)
+@admin.register(ShoppingCart)
 class ShoppingCartAdmin(admin.ModelAdmin):
     """
     Панель админа для редактирования списка покупок

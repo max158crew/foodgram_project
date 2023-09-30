@@ -48,7 +48,6 @@ class UsersViewSet(UserViewSet):
 
     pagination_class = RecipePagination
 
-
     @action(methods=['GET'], detail=False)
     def subscriptions(self, request):
         subscriptions_list = self.paginate_queryset(
@@ -83,7 +82,6 @@ class UsersViewSet(UserViewSet):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
-
 class TagViewSet(viewsets.ModelViewSet):
 
     queryset = Tag.objects.all()
@@ -99,9 +97,7 @@ class IngredientViewSet(viewsets.ModelViewSet):
     search_fields = ('name',)
 
 
-
 class RecipeViewSet(viewsets.ModelViewSet):
-
 
     queryset = Recipe.objects.all()
     serializer_class = GetRecipeSerializer
@@ -159,8 +155,3 @@ class RecipeViewSet(viewsets.ModelViewSet):
     def delete_favorite(self, request, pk):
         return self.__delete_method_for_actions(
             request=request, pk=pk, model=Favorite)
-
-
-
-
-
