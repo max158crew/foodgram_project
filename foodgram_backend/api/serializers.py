@@ -18,9 +18,6 @@ class TokenSerializer(serializers.Serializer):
 
 
 class UsersSerializer(UserSerializer):
-    """
-    Сериализатор пользователя с отметкой о подписке
-    """
 
     is_subscribed = serializers.SerializerMethodField()
 
@@ -126,7 +123,7 @@ class GetRecipeSerializer(serializers.ModelSerializer):
     ingredients = GetIngredientsInRecipeSerializer(
         many=True,
         read_only=True,
-        source="ingridients_in_recipe",
+        source="ingredients_in_recipe",
     )
     author = UsersSerializer(read_only=True)
     is_in_shopping_cart = serializers.SerializerMethodField(read_only=True)

@@ -1,5 +1,4 @@
 from django.db import models
-from django.contrib.auth import get_user_model
 from django.core.validators import MinValueValidator, RegexValidator
 
 from colorfield.fields import ColorField
@@ -80,6 +79,9 @@ class IngredientRecipe(models.Model):
         validators=[MinValueValidator(
             0.01, message="Ингредиента должно быть больше 0.01!")])
 
+    class Meta:
+        default_related_name = "ingredients_in_recipe"
+
     def __str__(self):
         return f"{self.recipe}: {self.ingredient} – {self.amount}"
 
@@ -112,8 +114,11 @@ class Favorite(models.Model):
 
     class Meta:
         ordering = ("user",)
+        default_related_name = "favorite"
         verbose_name = "Избранный рецепт"
         verbose_name_plural = "Избранное"
+        constraints = [models.UniqueConstraint(
+            fields=["recipe", "user"], name="unique_favorite")]
 
 class ShoppingCart(models.Model):
 
@@ -126,4 +131,6 @@ class ShoppingCart(models.Model):
         on_delete=models.CASCADE,
     )
 
+    class Meta:
+        default_related_name = "shopping_cart"
 
