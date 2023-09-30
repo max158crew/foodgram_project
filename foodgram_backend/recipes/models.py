@@ -5,14 +5,10 @@ from django.core.validators import MinValueValidator, RegexValidator
 from colorfield.fields import ColorField
 from users.models import User
 
-# User = get_user_model()
-
 
 
 class Tag(models.Model):
-    """
-    Модель тегов
-    """
+
     name_validator = RegexValidator(
         regex=r'^[a-zA-Z0-9_а-яА-Я]+$',
         message='Разрешены только буквы, цифры и символ подчеркивания',

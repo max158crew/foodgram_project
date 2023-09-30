@@ -106,15 +106,15 @@ class GetIngredientsInRecipeSerializer(serializers.ModelSerializer):
         source="ingredient", read_only=True)
     name = serializers.SlugRelatedField(
         source="ingredient", read_only=True, slug_field="name")
-    measurement_unit = serializers.SlugRelatedField(
-        source="ingredient", read_only=True, slug_field="measurement_unit")
+    measure = serializers.SlugRelatedField(
+        source="ingredient", read_only=True, slug_field="measure")
 
     class Meta:
         model = IngredientRecipe
         fields = (
             "id",
             "name",
-            "measurement_unit",
+            "measure",
             "amount",
         )
 
