@@ -59,28 +59,8 @@ class TagSerializer(serializers.ModelSerializer):
 
 
 
-class RecipeSerializer(serializers.ModelSerializer):
-    ingredients = IngredientSerializer(many=True, required=False)
-
-    class Meta:
-        model = Recipe
-        fields = ('id', 'name', 'author', 'text', 'ingredients')
-
-    def create(self, validated_data):
-        if 'ingredients' not in self.initial_data:
-            recipe = Recipe.objects.create(**validated_data)
-            return recipe
-        ingredients = validated_data.pop('ingredients')
-        recipe = Recipe.objects.create(**validated_data)
-        for ingredient in ingredients:
-            current_ingredient, status = Ingredient.objects.get_or_create(**ingredient)
-            IngredientRecipe.objects.create(ingredient=current_ingredient, recipe=recipe)
-        return recipe
-
 class RecipeShortSerializer(serializers.ModelSerializer):
-    """
-    Сериализатор короткой карточки рецепта
-    """
+
     class Meta:
         model = Recipe
         fields = ('id', 'name', 'image', 'cooking_time')
