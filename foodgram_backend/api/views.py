@@ -33,8 +33,6 @@ def token_jwt(request):
         user = get_object_or_404(
             User, email=request.data.get('email')
         )
-        print(user.username)
-        print(user.password)
         # if not default_token_generator.check_token(user, request.data.get('password')):
         #     return Response(
         #         'Неверный код',
