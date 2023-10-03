@@ -30,23 +30,29 @@ from .pagination import RecipePagination
 from .filters import RecipeFilter
 from .utility import download_shopping_list
 
+#JWT token
+# @api_view(['POST'])
+# @permission_classes([AllowAny])
+# def token_jwt(request):
+#     serializer = TokenSerializer(data=request.data)
+#     if serializer.is_valid():
+#         user = get_object_or_404(
+#             User, email=request.data.get('email')
+#         )
+#         token = {'auth_token': str(AccessToken.for_user(user))}
+#         return Response(token, status=HTTPStatus.OK)
+#     return Response(serializer.errors, status=HTTPStatus.BAD_REQUEST)
 
-@api_view(['POST'])
-@permission_classes([AllowAny])
-def token_jwt(request):
-    serializer = TokenSerializer(data=request.data)
-    if serializer.is_valid():
-        user = get_object_or_404(
-            User, email=request.data.get('email')
-        )
-        token = {'auth_token': str(AccessToken.for_user(user))}
-        return Response(token, status=HTTPStatus.OK)
-    return Response(serializer.errors, status=HTTPStatus.BAD_REQUEST)
 
 
 class UsersViewSet(UserViewSet):
 
     pagination_class = RecipePagination
+
+    @action(['GET'], detail=False, permission_classes=[IsAuthenticated])
+    def me(self, request, *args, **kwargs):
+        self.get_object = self.get_instance
+        return self.retrieve(request, *args, **kwargs)
 
     @action(methods=['GET'], detail=False)
     def subscriptions(self, request):

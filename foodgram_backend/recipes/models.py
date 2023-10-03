@@ -97,20 +97,6 @@ class Favorite(models.Model):
         User,
         on_delete=models.CASCADE,
     )
-    class Meta:
-        ordering = ("user",)
-
-class Favorite(models.Model):
-
-    recipe = models.ForeignKey(
-        Recipe,
-        related_name="in_favorited",
-        on_delete=models.CASCADE,
-    )
-    user = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE,
-    )
 
     class Meta:
         ordering = ("user",)
