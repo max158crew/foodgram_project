@@ -169,7 +169,7 @@ class CreateIngredientsInRecipeSerializer(serializers.ModelSerializer):
 class CreateRecipeSerializer(serializers.ModelSerializer):
 
     tags = serializers.PrimaryKeyRelatedField(
-        queryset=Tag.objects.all(), many=True, required=False)
+        queryset=Tag.objects.all(), many=True, required=True)
     image = Base64ImageField(use_url=True, max_length=None)
     author = UserSerializer(read_only=True)
     ingredients = CreateIngredientsInRecipeSerializer(many=True)

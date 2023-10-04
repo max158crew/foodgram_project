@@ -71,7 +71,7 @@ class UsersViewSet(UserViewSet):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
-class TagViewSet(viewsets.ModelViewSet):
+class TagViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Tag.objects.all()
     serializer_class = TagSerializer
     permission_classes = (IsAdminOrAuthorOrReadOnlyPermission,)
