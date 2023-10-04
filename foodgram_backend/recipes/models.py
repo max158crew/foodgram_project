@@ -39,12 +39,12 @@ class Ingredient(models.Model):
 
     name = models.CharField(
         max_length=200, db_index=True)
-    measure = models.CharField(
+    measurement_unit = models.CharField(
         max_length=60)
 
 
     def __str__(self):
-        return f"{self.name}, {self.measure}"
+        return f"{self.name}, {self.measurement_unit}"
 
 class Recipe(models.Model):
     name = models.CharField(

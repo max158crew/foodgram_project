@@ -44,7 +44,7 @@ class IngredientAdmin(ImportExportModelAdmin):
     list_display = (
         'id',
         "name",
-        "measure",
+        "measurement_unit",
     )
     list_display_links = ("name",)
     search_fields = ("name",)

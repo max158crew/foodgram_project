@@ -31,6 +31,6 @@ class Command(BaseCommand):
             next(reader)
             for row in reader:
                 print(row)
-                ingredient = Ingredient(name=row[0], measure=row[1])
+                ingredient = Ingredient(name=row[0], measurement_unit=row[1])
                 ingredient.save()
 

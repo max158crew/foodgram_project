@@ -12,7 +12,7 @@ from rest_framework.permissions import (
 from rest_framework.permissions import SAFE_METHODS, IsAuthenticated, \
     IsAuthenticatedOrReadOnly
 
-from rest_framework.decorators import action, api_view, permission_classes
+from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework import filters, status
 from djoser.views import UserViewSet
@@ -24,7 +24,7 @@ from .serializers import IngredientSerializer, TagSerializer, \
     FollowersSerializer, FollowSerializer, \
     GetRecipeSerializer, CreateRecipeSerializer, \
     ShoppingCartSerializer, FavoriteSerializer
-from .permissions import IsAdminOrAuthorOrReadOnlyPermission
+from .permissions import IsAdminOrAuthorOrReadOnlyPermission, ReadOnly, AdminOrReadOnly
 from .pagination import CustomPagination
 from .filters import RecipeFilter
 from .utility import download_shopping_list
@@ -75,8 +75,6 @@ class TagViewSet(viewsets.ModelViewSet):
     queryset = Tag.objects.all()
     serializer_class = TagSerializer
     permission_classes = (IsAdminOrAuthorOrReadOnlyPermission,)
-    filter_backends = (filters.SearchFilter,)
-    search_fields = ('name',)
     pagination_class = None
 
 
@@ -86,6 +84,7 @@ class IngredientViewSet(viewsets.ModelViewSet):
     permission_classes = (IsAdminOrAuthorOrReadOnlyPermission,)
     filter_backends = (filters.SearchFilter,)
     search_fields = ('name',)
+    pagination_class = None
 
 
 class RecipeViewSet(viewsets.ModelViewSet):
