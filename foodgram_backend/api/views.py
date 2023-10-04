@@ -1,6 +1,5 @@
 from http import HTTPStatus
 
-
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.tokens import default_token_generator
 from django.db import IntegrityError
@@ -10,21 +9,21 @@ from rest_framework.permissions import (
     AllowAny,
     IsAuthenticated,
 )
-from rest_framework.permissions import (SAFE_METHODS, IsAuthenticated,
-                                        IsAuthenticatedOrReadOnly)
+from rest_framework.permissions import SAFE_METHODS, IsAuthenticated, \
+    IsAuthenticatedOrReadOnly
+
 from rest_framework.decorators import action, api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework import filters, status
 from djoser.views import UserViewSet
-from rest_framework_simplejwt.tokens import AccessToken
 
 from recipes.models import Recipe, Tag, Ingredient, ShoppingCart, Favorite
 from users.models import Follow, User
 
 from .serializers import IngredientSerializer, TagSerializer, \
-    FollowersSerializer, FollowSerializer,\
+    FollowersSerializer, FollowSerializer, \
     GetRecipeSerializer, CreateRecipeSerializer, \
-    ShoppingCartSerializer, FavoriteSerializer, UserSerializer
+    ShoppingCartSerializer, FavoriteSerializer
 from .permissions import IsAdminOrAuthorOrReadOnlyPermission
 from .pagination import CustomPagination
 from .filters import RecipeFilter
@@ -32,8 +31,6 @@ from .utility import download_shopping_list
 
 
 class UsersViewSet(UserViewSet):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
 
     @action(['GET'], detail=False, permission_classes=[IsAuthenticated])
     def me(self, request, *args, **kwargs):
@@ -75,22 +72,23 @@ class UsersViewSet(UserViewSet):
 
 
 class TagViewSet(viewsets.ModelViewSet):
-
     queryset = Tag.objects.all()
     serializer_class = TagSerializer
+    permission_classes = (IsAdminOrAuthorOrReadOnlyPermission,)
+    filter_backends = (filters.SearchFilter,)
+    search_fields = ('name',)
+    pagination_class = None
 
 
 class IngredientViewSet(viewsets.ModelViewSet):
-
     queryset = Ingredient.objects.all()
     serializer_class = IngredientSerializer
-    permission_classes = (IsAdminOrAuthorOrReadOnlyPermission, )
+    permission_classes = (IsAdminOrAuthorOrReadOnlyPermission,)
     filter_backends = (filters.SearchFilter,)
     search_fields = ('name',)
 
 
 class RecipeViewSet(viewsets.ModelViewSet):
-
     queryset = Recipe.objects.all()
     serializer_class = GetRecipeSerializer
     pagination_class = CustomPagination
@@ -117,7 +115,8 @@ class RecipeViewSet(viewsets.ModelViewSet):
     def __delete_method_for_actions(request, pk, model):
         recipe = get_object_or_404(Recipe, id=pk)
         model_instance = get_object_or_404(
-            model, user=request.user, recipe=recipe)
+            model, user=request.user, recipe=recipe
+        )
         model_instance.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
@@ -130,7 +129,8 @@ class RecipeViewSet(viewsets.ModelViewSet):
     @shopping_cart.mapping.delete
     def delete_shopping_cart(self, request, pk):
         return self.__delete_method_for_actions(
-            request=request, pk=pk, model=ShoppingCart)
+            request=request, pk=pk, model=ShoppingCart
+        )
 
     @action(
         detail=False, methods=['GET'], permission_classes=(IsAuthenticated,)
@@ -141,9 +141,11 @@ class RecipeViewSet(viewsets.ModelViewSet):
     @action(detail=True, methods=['POST'])
     def favorite(self, request, pk):
         return self.__post_method_for_actions(
-            request=request, pk=pk, serializers=FavoriteSerializer)
+            request=request, pk=pk, serializers=FavoriteSerializer
+        )
 
     @favorite.mapping.delete
     def delete_favorite(self, request, pk):
         return self.__delete_method_for_actions(
-            request=request, pk=pk, model=Favorite)
+            request=request, pk=pk, model=Favorite
+        )
