@@ -23,31 +23,17 @@ from users.models import Follow, User
 
 from .serializers import IngredientSerializer, TagSerializer, \
     FollowersSerializer, FollowSerializer,\
-    TokenSerializer, GetRecipeSerializer, CreateRecipeSerializer, \
-    ShoppingCartSerializer, FavoriteSerializer
+    GetRecipeSerializer, CreateRecipeSerializer, \
+    ShoppingCartSerializer, FavoriteSerializer, UserSerializer
 from .permissions import IsAdminOrAuthorOrReadOnlyPermission
-from .pagination import RecipePagination
+from .pagination import CustomPagination
 from .filters import RecipeFilter
 from .utility import download_shopping_list
 
-#JWT token
-# @api_view(['POST'])
-# @permission_classes([AllowAny])
-# def token_jwt(request):
-#     serializer = TokenSerializer(data=request.data)
-#     if serializer.is_valid():
-#         user = get_object_or_404(
-#             User, email=request.data.get('email')
-#         )
-#         token = {'auth_token': str(AccessToken.for_user(user))}
-#         return Response(token, status=HTTPStatus.OK)
-#     return Response(serializer.errors, status=HTTPStatus.BAD_REQUEST)
-
-
 
 class UsersViewSet(UserViewSet):
-
-    pagination_class = RecipePagination
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
 
     @action(['GET'], detail=False, permission_classes=[IsAuthenticated])
     def me(self, request, *args, **kwargs):
@@ -107,7 +93,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
 
     queryset = Recipe.objects.all()
     serializer_class = GetRecipeSerializer
-    pagination_class = RecipePagination
+    pagination_class = CustomPagination
     filter_backends = (DjangoFilterBackend,)
     filterset_class = RecipeFilter
     permission_classes = (

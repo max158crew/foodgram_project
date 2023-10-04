@@ -8,13 +8,9 @@ from rest_framework.generics import get_object_or_404
 from rest_framework.validators import UniqueTogetherValidator
 from rest_framework.exceptions import ValidationError
 
-from recipes.models import Recipe, Ingredient, IngredientRecipe, Tag, Favorite, ShoppingCart
+from recipes.models import Recipe, Ingredient, IngredientRecipe, Tag, \
+    Favorite, ShoppingCart
 from users.models import Follow, User
-
-class TokenSerializer(serializers.Serializer):
-    """Сериализатор для получения токена."""
-    password = serializers.CharField()
-    email = serializers.EmailField()
 
 
 class UsersSerializer(UserSerializer):

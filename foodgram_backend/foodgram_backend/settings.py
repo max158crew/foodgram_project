@@ -32,10 +32,11 @@ INSTALLED_APPS = [
     'djoser',
     'rest_framework.authtoken',
     'api',
-    'recipes',
-    'users',
+    'recipes.apps.RecipesConfig',
+    'users.apps.UsersConfig',
     'colorfield',
     'import_export',
+    'django_filters',
 ]
 
 MIDDLEWARE = [
@@ -148,11 +149,6 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication',
     ],
-    # 'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    # 'PAGE_SIZE': 6,
+    'DEFAULT_PAGINATION_CLASS': 'api.pagination.CustomPagination',
+    'PAGE_SIZE': 6,
 }
-
-# SIMPLE_JWT = {
-#    'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
-#    'AUTH_HEADER_TYPES': ('Bearer',),
-# }
