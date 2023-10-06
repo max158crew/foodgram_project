@@ -55,7 +55,7 @@ class Recipe(models.Model):
         User, related_name='recipes', on_delete=models.CASCADE
     )
     text = models.TextField()
-    ingredients = models.ManyToManyField(Ingredient, through='IngredientRecipe')
+    ingredients = models.ManyToManyField(Ingredient, through='IngredientRecipe', blank=False)
     image = models.ImageField(blank=True, upload_to="recipes/images")
     tags = models.ManyToManyField(Tag, blank=False)
     pub_date = models.DateTimeField(

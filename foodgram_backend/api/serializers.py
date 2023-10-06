@@ -172,7 +172,7 @@ class CreateRecipeSerializer(serializers.ModelSerializer):
         queryset=Tag.objects.all(), many=True, required=True)
     image = Base64ImageField(use_url=True, max_length=None)
     author = UserSerializer(read_only=True)
-    ingredients = CreateIngredientsInRecipeSerializer(many=True)
+    ingredients = CreateIngredientsInRecipeSerializer(many=True, required=True)
     cooking_time = serializers.IntegerField()
 
     def __create_ingredients(self, recipe, ingredients):
@@ -186,24 +186,37 @@ class CreateRecipeSerializer(serializers.ModelSerializer):
 
     def validate(self, data):
         ingredients = self.initial_data.get('ingredients')
+        tags_ids = self.initial_data.get('tags')
+        if not tags_ids or not ingredients:
+            raise ValidationError("Недостаточно данных.")
         ingredients_list = []
         for ingredient in ingredients:
             ingredient_id = ingredient.get('id')
             if ingredient_id in ingredients_list:
                 raise ValidationError(
-                    'Есть задублированные ингредиенты!'
+                    "Есть задублированные ингредиенты!"
                 )
             ingredients_list.append(ingredient_id)
+
+        tags_list = []
+        for tag in tags_ids:
+            if tag in tags_list:
+                raise ValidationError(
+                    "Есть задублированные тэги!"
+                )
+            tags_list.append(tag)
+
         if data['cooking_time'] < 1:
             raise ValidationError(
-                'Время приготовления должно быть не менее 1 минуты!'
+                "Время приготовления должно быть не менее 1 минуты!"
             )
         return data
+
 
     @transaction.atomic
     def create(self, validated_data):
         request = self.context.get('request')
-        ingredients = validated_data.pop('ingredients') or []
+        ingredients = validated_data.pop('ingredients')
         tags = validated_data.pop('tags')
         recipe = Recipe.objects.create(
             author=request.user,
