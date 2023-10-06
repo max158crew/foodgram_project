@@ -24,7 +24,7 @@ from .serializers import IngredientSerializer, TagSerializer, \
     FollowersSerializer, FollowSerializer, \
     GetRecipeSerializer, CreateRecipeSerializer, \
     ShoppingCartSerializer, FavoriteSerializer
-from .permissions import IsAdminOrAuthorOrReadOnlyPermission, ReadOnly, AdminOrReadOnly
+from .permissions import IsAdminOrAuthorOrReadOnlyPermission
 from .pagination import CustomPagination
 from .filters import RecipeFilter
 from .utility import download_shopping_list

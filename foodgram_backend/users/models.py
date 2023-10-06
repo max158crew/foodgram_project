@@ -31,6 +31,13 @@ class User(AbstractUser):
     def __str__(self):
         return self.username
 
+    @property
+    def is_admin(self):
+        return (
+            self.role == self.ADMIN
+            or self.is_superuser
+        )
+
 
 class Follow(models.Model):
 
