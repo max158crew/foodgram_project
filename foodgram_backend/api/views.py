@@ -9,6 +9,8 @@ from rest_framework.permissions import (
     AllowAny,
     IsAuthenticated,
 )
+from rest_framework.generics import ListAPIView
+from rest_framework.views import APIView
 from rest_framework.permissions import SAFE_METHODS, IsAuthenticated, \
     IsAuthenticatedOrReadOnly
 
@@ -36,9 +38,82 @@ class UsersViewSet(UserViewSet):
     def me(self, request, *args, **kwargs):
         self.get_object = self.get_instance
         return self.retrieve(request, *args, **kwargs)
+    #
+    # @action(methods=['GET'], detail=False)
+    # def subscriptions(self, request):
+    #     subscriptions_list = self.paginate_queryset(
+    #         User.objects.filter(following__user=request.user)
+    #     )
+    #     serializer = FollowersSerializer(
+    #         subscriptions_list, many=True, context={
+    #             'request': request
+    #         }
+    #     )
+    #     return self.get_paginated_response(serializer.data)
+    #
+    # @action(methods=['POST', 'DELETE'], detail=True)
+    # def subscribe(self, request, id):
+    #     if request.method != 'POST':
+    #         subscription = get_object_or_404(
+    #             Follow,
+    #             author=get_object_or_404(User, id=id),
+    #             user=request.user
+    #         )
+    #         self.perform_destroy(subscription)
+    #         return Response(status=status.HTTP_204_NO_CONTENT)
+    #     serializer = FollowSerializer(
+    #         data={
+    #             'user': request.user.id,
+    #             'author': get_object_or_404(User, id=id).id
+    #         },
+    #         context={'request': request}
+    #     )
+    #     serializer.is_valid(raise_exception=True)
+    #     serializer.save()
+    #     return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-    @action(methods=['GET'], detail=False)
-    def subscriptions(self, request):
+
+class SubscribeView(APIView):
+    """ Операция подписки/отписки. """
+
+    permission_classes = [IsAuthenticated, ]
+
+    def post(self, request, id):
+        data = {
+            'user': request.user.id,
+            'author': id
+        }
+        serializer = FollowSerializer(
+            data=data,
+            context={'request': request}
+        )
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, id):
+        author = get_object_or_404(User, id=id)
+        if Follow.objects.filter(
+           user=request.user, author=author).exists():
+            subscription = get_object_or_404(
+                Follow, user=request.user, author=author
+            )
+            subscription.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+class ShowSubscriptionsView(ListAPIView):
+    """ Отображение подписок. """
+
+    permission_classes = [IsAuthenticated, ]
+    pagination_class = CustomPagination
+    filter_backends = (DjangoFilterBackend,)
+    filterset_class = RecipeFilter
+    serializer_class = FollowersSerializer
+
+    def get(self, request):
         subscriptions_list = self.paginate_queryset(
             User.objects.filter(following__user=request.user)
         )
@@ -48,27 +123,6 @@ class UsersViewSet(UserViewSet):
             }
         )
         return self.get_paginated_response(serializer.data)
-
-    @action(methods=['POST', 'DELETE'], detail=True)
-    def subscribe(self, request, id):
-        if request.method != 'POST':
-            subscription = get_object_or_404(
-                Follow,
-                author=get_object_or_404(User, id=id),
-                user=request.user
-            )
-            self.perform_destroy(subscription)
-            return Response(status=status.HTTP_204_NO_CONTENT)
-        serializer = FollowSerializer(
-            data={
-                'user': request.user.id,
-                'author': get_object_or_404(User, id=id).id
-            },
-            context={'request': request}
-        )
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
 class TagViewSet(viewsets.ReadOnlyModelViewSet):
