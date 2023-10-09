@@ -5,7 +5,6 @@ from colorfield.fields import ColorField
 from users.models import User
 
 
-
 class Tag(models.Model):
 
     name_validator = RegexValidator(
@@ -35,6 +34,7 @@ class Tag(models.Model):
     def __str__(self):
         return self.slug
 
+
 class Ingredient(models.Model):
 
     name = models.CharField(
@@ -42,9 +42,9 @@ class Ingredient(models.Model):
     measurement_unit = models.CharField(
         max_length=60)
 
-
     def __str__(self):
         return f"{self.name}, {self.measurement_unit}"
+
 
 class Recipe(models.Model):
     name = models.CharField(
@@ -55,7 +55,9 @@ class Recipe(models.Model):
         User, related_name='recipes', on_delete=models.CASCADE
     )
     text = models.TextField()
-    ingredients = models.ManyToManyField(Ingredient, through='IngredientRecipe', blank=False)
+    ingredients = models.ManyToManyField(Ingredient,
+                                         through='IngredientRecipe',
+                                         blank=False)
     image = models.ImageField(blank=True, upload_to="recipes/images")
     tags = models.ManyToManyField(Tag, blank=False)
     pub_date = models.DateTimeField(
@@ -70,6 +72,7 @@ class Recipe(models.Model):
 
     def __str__(self):
         return self.name
+
 
 class IngredientRecipe(models.Model):
     ingredient = models.ForeignKey(Ingredient, on_delete=models.CASCADE)
@@ -106,6 +109,7 @@ class Favorite(models.Model):
         constraints = [models.UniqueConstraint(
             fields=["recipe", "user"], name="unique_favorite")]
 
+
 class ShoppingCart(models.Model):
 
     recipe = models.ForeignKey(
@@ -119,4 +123,3 @@ class ShoppingCart(models.Model):
 
     class Meta:
         default_related_name = "shopping_cart"
-

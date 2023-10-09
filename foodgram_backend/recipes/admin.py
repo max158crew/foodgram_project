@@ -39,7 +39,6 @@ class IngredientResource(resources.ModelResource):
 @admin.register(Ingredient)
 class IngredientAdmin(ImportExportModelAdmin):
 
-
     resource_class = IngredientResource
     list_display = (
         'id',
@@ -54,7 +53,6 @@ class IngredientAdmin(ImportExportModelAdmin):
 
 @admin.register(Recipe)
 class RecipeAdmin(admin.ModelAdmin):
-
 
     list_display = (
         "name",

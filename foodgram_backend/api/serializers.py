@@ -43,7 +43,6 @@ class IngredientSerializer(serializers.ModelSerializer):
 
 class TagSerializer(serializers.ModelSerializer):
 
-
     class Meta:
         model = Tag
         fields = (
@@ -52,7 +51,6 @@ class TagSerializer(serializers.ModelSerializer):
             'color',
             'slug',
         )
-
 
 
 class RecipeShortSerializer(serializers.ModelSerializer):
@@ -65,10 +63,10 @@ class RecipeShortSerializer(serializers.ModelSerializer):
 class Base64ImageField(serializers.ImageField):
     def to_internal_value(self, data):
         if isinstance(data, str) and data.startswith('data:image'):
-            format, imgstr = data.split(';base64,')
+            format, img = data.split(';base64,')
             ext = format.split('/')[-1]
 
-            data = ContentFile(base64.b64decode(imgstr), name='temp.' + ext)
+            data = ContentFile(base64.b64decode(img), name='temp.' + ext)
 
         return super().to_internal_value(data)
 
@@ -91,8 +89,8 @@ class GetIngredientsInRecipeSerializer(serializers.ModelSerializer):
             "amount",
         )
 
-class GetRecipeSerializer(serializers.ModelSerializer):
 
+class GetRecipeSerializer(serializers.ModelSerializer):
 
     image = Base64ImageField(required=False, allow_null=True)
     tags = TagSerializer(many=True, read_only=True)
@@ -141,7 +139,6 @@ class CreateIngredientsInRecipeSerializer(serializers.ModelSerializer):
         source="ingredient", queryset=Ingredient.objects.all())
 
     def validate_quantity(self, data):
-
         try:
             quantity = float(data)
             if quantity < 0.001:
@@ -211,7 +208,6 @@ class CreateRecipeSerializer(serializers.ModelSerializer):
                 "Время приготовления должно быть не менее 1 минуты!"
             )
         return data
-
 
     @transaction.atomic
     def create(self, validated_data):
@@ -347,6 +343,7 @@ class FavoriteSerializer(serializers.ModelSerializer):
         return RecipeShortSerializer(
             instance.recipe, context=context).data
 
+
 class ShoppingCartSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
@@ -366,4 +363,3 @@ class ShoppingCartSerializer(serializers.ModelSerializer):
             fields=('user', 'recipe'),
             message='Рецепт уже в корзине')
         ]
-

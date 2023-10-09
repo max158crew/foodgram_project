@@ -8,7 +8,7 @@ def download_shopping_list(request):
     for item in shopping_cart:
         for ingredients in item.recipe.ingridients_in_recipe.all():
             name = ingredients.ingredient.name
-            measuring_unit = ingredients.ingredient.measure
+            measuring_unit = ingredients.ingredient.measurement_unit
             amount = ingredients.amount
             if name not in shopping_list:
                 shopping_list[name] = {

@@ -4,8 +4,7 @@ from django.db import models
 
 
 class User(AbstractUser):
-
-
+    """Модель пользователя с ролями автора и администратора"""
     USER = "user"
     ADMIN = "admin"
     ROLES = (
@@ -40,6 +39,7 @@ class User(AbstractUser):
 
 
 class Follow(models.Model):
+    """Модель подписки на автора рецепта"""
 
     user = models.ForeignKey(
         User,

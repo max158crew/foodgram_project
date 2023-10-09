@@ -5,9 +5,6 @@ from .models import Follow, User
 
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
-    """
-    Панель админа для редактирования пользователей
-    """
 
     list_display = ("role", "username", "email", "first_name", "last_name")
     list_display_links = ("username",)
@@ -19,14 +16,10 @@ class UserAdmin(admin.ModelAdmin):
         "username",
         "email",
     )
-    empty_value_display = "-пусто-"
 
 
 @admin.register(Follow)
 class FollowAdmin(admin.ModelAdmin):
-    """
-    Панель админа для редактирования подписок на авторов
-    """
 
     list_display = (
         "user",
@@ -38,4 +31,3 @@ class FollowAdmin(admin.ModelAdmin):
         "author",
     )
     list_filter = ("user",)
-    empty_value_display = "-пусто-"

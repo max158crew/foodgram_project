@@ -1,16 +1,6 @@
-from http import HTTPStatus
-
 from django.shortcuts import get_object_or_404
-from django.contrib.auth.tokens import default_token_generator
-from django.db import IntegrityError
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets
-from rest_framework.permissions import (
-    AllowAny,
-    IsAuthenticated,
-)
-from rest_framework.generics import ListAPIView
-from rest_framework.views import APIView
 from rest_framework.permissions import SAFE_METHODS, IsAuthenticated, \
     IsAuthenticatedOrReadOnly
 
@@ -88,7 +78,6 @@ class IngredientViewSet(viewsets.ReadOnlyModelViewSet):
     filterset_fields = ('name',)
     search_fields = ('name',)
     pagination_class = None
-
 
 
 class RecipeViewSet(viewsets.ModelViewSet):
