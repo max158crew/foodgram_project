@@ -14,7 +14,7 @@ class Command(BaseCommand):
 
     @staticmethod
     def clear_data():
-        """Deletes all the table data"""
+        """Удаление всех данных из таблицы Ингредиенты"""
         print('Clear data started')
         Ingredient.objects.all().delete()
 
@@ -33,4 +33,3 @@ class Command(BaseCommand):
                 print(row)
                 ingredient = Ingredient(name=row[0], measurement_unit=row[1])
                 ingredient.save()
-

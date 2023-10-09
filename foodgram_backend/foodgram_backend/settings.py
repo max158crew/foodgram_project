@@ -35,7 +35,6 @@ INSTALLED_APPS = [
     'recipes',
     'users',
     'colorfield',
-    'import_export',
     'django_filters',
 ]
 

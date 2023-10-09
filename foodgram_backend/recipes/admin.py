@@ -1,12 +1,10 @@
 from django.contrib import admin
-from import_export import resources
-from import_export.admin import ImportExportModelAdmin
 
 from .models import (Favorite, Ingredient, IngredientRecipe, Recipe,
                      ShoppingCart, Tag)
 
 
-class IngredientsInRecipeAdmin(admin.TabularInline):
+class IngredientsRecipeAdmin(admin.TabularInline):
     model = IngredientRecipe
 
 
@@ -24,31 +22,22 @@ class TagAdmin(admin.ModelAdmin):
     list_display_links = ("name",)
     search_fields = ("name",)
     list_filter = ("name",)
-    empty_value_display = "-пусто-"
-
-
-class IngredientResource(resources.ModelResource):
-    """
-    Вспомогательная модель для экспорта/импорта ингредиентов
-    """
-
-    class Meta:
-        model = Ingredient
 
 
 @admin.register(Ingredient)
-class IngredientAdmin(ImportExportModelAdmin):
+class IngredientAdmin(admin.ModelAdmin):
+    """
+    Панель администратора для редактирования Ингредиентов
+    """
 
-    resource_class = IngredientResource
     list_display = (
-        'id',
+        "id",
         "name",
         "measurement_unit",
     )
     list_display_links = ("name",)
     search_fields = ("name",)
     list_filter = ("name",)
-    empty_value_display = "-пусто-"
 
 
 @admin.register(Recipe)
@@ -66,10 +55,9 @@ class RecipeAdmin(admin.ModelAdmin):
         "name",
         "author",
     )
-    empty_value_display = "-пусто-"
     readonly_fields = ("in_favorited",)
     filter_horizontal = ("tags",)
-    inlines = (IngredientsInRecipeAdmin,)
+    inlines = (IngredientsRecipeAdmin,)
 
     def in_favorited(self, obj):
         return obj.in_favorited.all().count()
@@ -90,7 +78,6 @@ class FavoriteAdmin(admin.ModelAdmin):
         "recipe",
     )
     list_filter = ("recipe",)
-    empty_value_display = "-пусто-"
 
 
 @admin.register(ShoppingCart)
@@ -111,4 +98,3 @@ class ShoppingCartAdmin(admin.ModelAdmin):
         "user",
         "recipe",
     )
-    empty_value_display = "-пусто-"

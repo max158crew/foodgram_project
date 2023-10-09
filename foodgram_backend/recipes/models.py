@@ -6,6 +6,10 @@ from users.models import User
 
 
 class Tag(models.Model):
+    """
+    Модель тэгов для рецептов.
+
+    """
 
     name_validator = RegexValidator(
         regex=r'^[a-zA-Z0-9_а-яА-Я]+$',
@@ -36,6 +40,9 @@ class Tag(models.Model):
 
 
 class Ingredient(models.Model):
+    """
+    Модель ингредиентов для рецепта.
+    """
 
     name = models.CharField(
         max_length=200, db_index=True)
@@ -47,6 +54,9 @@ class Ingredient(models.Model):
 
 
 class Recipe(models.Model):
+    """
+    Модель рецептов.
+    """
     name = models.CharField(
         max_length=200,
         verbose_name="Название",
@@ -75,6 +85,10 @@ class Recipe(models.Model):
 
 
 class IngredientRecipe(models.Model):
+    """Количество ингредиентов в блюде.
+        Модель связывает Recipe и Ingredient
+        с указанием количества ингредиента.
+    """
     ingredient = models.ForeignKey(Ingredient, on_delete=models.CASCADE)
     recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE)
     amount = models.FloatField(
@@ -90,6 +104,9 @@ class IngredientRecipe(models.Model):
 
 
 class Favorite(models.Model):
+    """
+    Модель для избранных рецептов. Связывает модели Recipe и User.
+    """
 
     recipe = models.ForeignKey(
         Recipe,
@@ -104,13 +121,14 @@ class Favorite(models.Model):
     class Meta:
         ordering = ("user",)
         default_related_name = "favorite"
-        verbose_name = "Избранный рецепт"
-        verbose_name_plural = "Избранное"
         constraints = [models.UniqueConstraint(
             fields=["recipe", "user"], name="unique_favorite")]
 
 
 class ShoppingCart(models.Model):
+    """
+    Модель продуктовой корзины
+    """
 
     recipe = models.ForeignKey(
         Recipe,
@@ -119,6 +137,9 @@ class ShoppingCart(models.Model):
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
+    )
+    date_added = models.DateTimeField(
+        verbose_name="Дата добавления", auto_now_add=True, editable=False
     )
 
     class Meta:
