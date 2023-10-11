@@ -26,7 +26,7 @@ class Command(BaseCommand):
     @staticmethod
     def seed_ingredients():
         print('Seed ingredients started')
-        with open('../data/ingredients.csv') as file:
+        with open('data/ingredients.csv') as file:
             reader = csv.reader(file)
             next(reader)
             for row in reader:

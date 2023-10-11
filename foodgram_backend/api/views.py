@@ -18,7 +18,7 @@ from .serializers import IngredientSerializer, TagSerializer, \
     ShoppingCartSerializer, FavoriteSerializer
 from .permissions import IsAdminOrAuthorOrReadOnlyPermission
 from .pagination import CustomPagination
-from .filters import RecipeFilter
+from .filters import RecipeFilter, IngredientFilter
 from .utility import download_shopping_list
 
 
@@ -74,9 +74,8 @@ class IngredientViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Ingredient.objects.all()
     serializer_class = IngredientSerializer
     permission_classes = (IsAdminOrAuthorOrReadOnlyPermission,)
-    filter_backends = (filters.SearchFilter, DjangoFilterBackend,)
-    filterset_fields = ('name',)
-    search_fields = ('name',)
+    filter_backends = [IngredientFilter, ]
+    search_fields = ['^name', ]
     pagination_class = None
 
 
