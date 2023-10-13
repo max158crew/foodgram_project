@@ -334,8 +334,7 @@ class FavoriteSerializer(serializers.ModelSerializer):
         validators = [UniqueTogetherValidator(
             queryset=Favorite.objects.all(),
             fields=('user', 'recipe'),
-            message='Рецепт уже в избранном')
-            ]
+            message='Рецепт уже в избранном')]
 
     def to_representation(self, instance):
         request = self.context.get('request')

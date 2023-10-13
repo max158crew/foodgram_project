@@ -6,7 +6,7 @@ from rest_framework.permissions import SAFE_METHODS, IsAuthenticated, \
 
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from rest_framework import filters, status
+from rest_framework import status
 from djoser.views import UserViewSet
 
 from recipes.models import Recipe, Tag, Ingredient, ShoppingCart, Favorite

@@ -25,11 +25,9 @@ class Tag(models.Model):
 
     name = models.CharField(
         max_length=100,
-        validators=[name_validator]
-        )
+        validators=[name_validator])
     color = ColorField(format="hex",
-                       validators=[color_validator]
-                       )
+                       validators=[color_validator])
     slug = models.SlugField(verbose_name="Slug", unique=True)
 
     class Meta:
