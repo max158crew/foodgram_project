@@ -1,12 +1,8 @@
-# Foodgram by [Denyacore](https://github.com/Denyacore) & [Dimalright](https://github.com/Dimalright)
 
-
-
-Cайт [Foodgram], Продуктовый помощник с возможностью размещать рецепты пользователей, подписываться на других авторов, добавлять список ингредиентов выбранного рецепта в корзину, скачивать список ингредиентов из корзины. 
+Cайт [Foodgram](https://yandexmax.ddns.net/recipes), Продуктовый помощник с возможностью размещать рецепты пользователей, подписываться на других авторов, добавлять список ингредиентов выбранного рецепта в корзину, скачивать список ингредиентов из корзины. 
 ## Использованные технологии
 
 ![Python](https://img.shields.io/badge/Python-3.7-3776AB?logo=Python&style=flat-square)
-
 
 [![Nginx](https://img.shields.io/badge/-NGINX-464646?style=flat-square&logo=NGINX)](https://nginx.org/ru/)
 
@@ -16,16 +12,15 @@ Cайт [Foodgram], Продуктовый помощник с возможно�
 
 [![Docker Compose](https://img.shields.io/badge/Docker_Compose-464646?style=flat-square)](https://docs.docker.com/compose/)
 
-
-[![GitHub%20Actions](https://img.shields.io/badge/-GitHub%20Actions-464646?style=flat-square&logo=GitHub%20actions)](https://github.com/features/actions)
-
 [![Yandex.Cloud](https://img.shields.io/badge/-Yandex.Cloud-464646?style=flat-square&logo=Yandex.Cloud)](https://cloud.yandex.ru/)
 
 [![Django REST Framework](https://img.shields.io/badge/-Django%20REST%20Framework-464646?style=flat-square&logo=Django%20REST%20Framework)](https://www.django-rest-framework.org/)
 
 [![Postgres](https://img.shields.io/badge/postgres-%23316192.svg?style=for-the-badge&logo=postgresql&logoColor=white)](https://www.postgresql.org/)
 
-
+## ip: 158.160.68.205, https://yandexmax.ddns.net/recipes
+Admin login: test@mail.com
+pass: Asd1asd2asd3
 
 ## Запуск
 Клонировать репозиторий и перейти в него в командной строке:
@@ -40,34 +35,36 @@ cd infra
 Для функционирования - создать файл .env и прописать переменные окружения в нём.
 
 ```bash
-SECRET_KEY= <ваш_secret_key>
-DB_ENGINE=django.db.backends.postgresql # указываем, что работаем с postgresql
-DB_NAME=postgres # имя базы данных
-POSTGRES_USER=postgres # логин для подключения к базе данных
-POSTGRES_PASSWORD=password # пароль для подключения к БД (установите свой)
-DB_HOST=db # название сервиса (контейнера)
-DB_PORT=5432 # порт для подключения к БД
+POSTGRES_USER=django_user
+POSTGRES_PASSWORD=mysecretpassword
+POSTGRES_DB=django
+DB_HOST=db
+DB_PORT=5432
+SECRET_KEY=<ваш_secret_key>
+DEBUG=True
+ALLOWED_HOSTS=localhost,127.0.0.1,158.160.68.205,<ip_вашего_сервера>
 ```
 
 Выполнить команду из директории infra, где находится файл docker-compose.yaml
 ```bash
-docker-compose up
+docker compose up
 ```
 Выполнить миграции, создать суперпользователя и собрать статику. 
 ```bash
-docker-compose exec backend python manage.py makemigrations
-docker-compose exec backend python manage.py migrate
-docker-compose exec backend python manage.py collectstatic --no-input
+docker compose exec backend python manage.py makemigrations
+docker compose exec backend python manage.py migrate
+docker compose exec backend python manage.py collectstatic 
+docker compose exec backend cp -r /app/collected_static/. /backend_static/static/ 
 ```
 Заполнить базу данными
 ```
-docker-compose exec web python manage.py importcsv
+docker compose exec backend python manage.py importcsv
 ```
 База данных заполнится ингредиентами. 
 
 Создать суперпользователя (введите логин, почту, имя, фамилию пароль):
 ```
-docker-compose exec web python manage.py createsuperuser
+docker compose exec backend python manage.py createsuperuser
 ```
 Залогиниться в админ панель, используя данные суперпользователя.
 Через админ панель создать 2-3 тэга для проведения тестов.

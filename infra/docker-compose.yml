@@ -22,7 +22,7 @@ services:
       - ../.env
 
   backend:
-    image: max158crew/foodgram_backend
+    image: max158crew/foodgram_backend1
     env_file: ../.env
     volumes:
       - static:/backend_static
