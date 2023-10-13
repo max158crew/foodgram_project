@@ -44,13 +44,17 @@ class UsersViewSet(UserViewSet):
     @action(methods=['POST', 'DELETE'], detail=True)
     def subscribe(self, request, id):
         if request.method != 'POST':
-            subscription = get_object_or_404(
-                Follow,
-                author=get_object_or_404(User, id=id),
-                user=request.user
-            )
-            self.perform_destroy(subscription)
-            return Response(status=status.HTTP_204_NO_CONTENT)
+            author = get_object_or_404(User, id=id)
+            if Follow.objects.filter(user=request.user,
+                                     author=author).exists():
+                subscription = get_object_or_404(
+                    Follow,
+                    author=author,
+                    user=request.user
+                )
+                self.perform_destroy(subscription)
+                return Response(status=status.HTTP_204_NO_CONTENT)
+            return Response(status=status.HTTP_400_BAD_REQUEST)
         serializer = FollowSerializer(
             data={
                 'user': request.user.id,
@@ -119,9 +123,15 @@ class RecipeViewSet(viewsets.ModelViewSet):
 
     @shopping_cart.mapping.delete
     def delete_shopping_cart(self, request, pk):
-        return self.__delete_method_for_actions(
-            request=request, pk=pk, model=ShoppingCart
-        )
+        recipe = get_object_or_404(Recipe, id=pk)
+        if ShoppingCart.objects.filter(
+                user=request.user, recipe=recipe
+        ).exists():
+            ShoppingCart.objects.filter(
+                user=request.user, recipe=recipe
+            ).delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response(status=status.HTTP_400_BAD_REQUEST)
 
     @action(
         detail=False, methods=['GET'], permission_classes=(IsAuthenticated,)
@@ -137,6 +147,11 @@ class RecipeViewSet(viewsets.ModelViewSet):
 
     @favorite.mapping.delete
     def delete_favorite(self, request, pk):
-        return self.__delete_method_for_actions(
-            request=request, pk=pk, model=Favorite
-        )
+        recipe = get_object_or_404(Recipe, id=pk)
+        if Favorite.objects.filter(
+                user=request.user, recipe=recipe
+        ).exists():
+            Favorite.objects.filter(user=request.user, recipe=recipe
+                                    ).delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response(status=status.HTTP_400_BAD_REQUEST)
