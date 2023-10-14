@@ -4,16 +4,16 @@ from django.db import models
 
 
 class User(AbstractUser):
-    """Модель пользователя с ролями автора и администратора"""
+    """Модель пользователя с правами пользователя и администратора"""
     USER = "user"
     ADMIN = "admin"
     ROLES = (
         (USER, "user"),
         (ADMIN, "admin"),
     )
-    username_validator = UnicodeUsernameValidator()
-    username = models.CharField(max_length=150, unique=True, validators=[
-                                username_validator], verbose_name="Логин")
+    username = models.CharField(max_length=150, unique=True,
+                                validators=[UnicodeUsernameValidator()],
+                                verbose_name="Логин")
     email = models.EmailField(unique=True, verbose_name="E-mail")
     first_name = models.CharField(max_length=150, verbose_name="Имя")
     last_name = models.CharField(max_length=150, verbose_name="Фамилия")
