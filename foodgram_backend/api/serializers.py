@@ -1,16 +1,14 @@
-import base64
-
 from django.db import transaction
 from rest_framework import serializers
 from djoser.serializers import UserSerializer
-from django.core.files.base import ContentFile
 from rest_framework.generics import get_object_or_404
 from rest_framework.validators import UniqueTogetherValidator
 from rest_framework.exceptions import ValidationError
 
-from recipes.models import Recipe, Ingredient, IngredientRecipe, Tag, \
-    Favorite, ShoppingCart
+from recipes.models import (Recipe, Ingredient, IngredientRecipe, Tag,
+                            Favorite, ShoppingCart)
 from users.models import Follow, User
+from .fields import Base64ImageField
 
 
 class UsersSerializer(UserSerializer):
@@ -58,17 +56,6 @@ class RecipeShortSerializer(serializers.ModelSerializer):
     class Meta:
         model = Recipe
         fields = ('id', 'name', 'image', 'cooking_time')
-
-
-class Base64ImageField(serializers.ImageField):
-    def to_internal_value(self, data):
-        if isinstance(data, str) and data.startswith('data:image'):
-            format, img = data.split(';base64,')
-            ext = format.split('/')[-1]
-
-            data = ContentFile(base64.b64decode(img), name='temp.' + ext)
-
-        return super().to_internal_value(data)
 
 
 class GetIngredientsInRecipeSerializer(serializers.ModelSerializer):
@@ -139,6 +126,7 @@ class CreateIngredientsInRecipeSerializer(serializers.ModelSerializer):
         source="ingredient", queryset=Ingredient.objects.all())
 
     def validate_quantity(self, data):
+        """ Проверка введенного количества ингредиента."""
         try:
             quantity = float(data)
             if quantity < 0.001:
@@ -225,10 +213,9 @@ class CreateRecipeSerializer(serializers.ModelSerializer):
     @transaction.atomic
     def update(self, instance, validated_data):
         ingredients = validated_data.pop('ingredients')
-        recipe = instance
-        IngredientRecipe.objects.filter(recipe=recipe).delete()
-        self.__create_ingredients(recipe, ingredients)
-        return super().update(recipe, validated_data)
+        IngredientRecipe.objects.filter(recipe=instance).delete()
+        self.__create_ingredients(instance, ingredients)
+        return super().update(instance, validated_data)
 
     def to_representation(self, instance):
         return GetRecipeSerializer(
