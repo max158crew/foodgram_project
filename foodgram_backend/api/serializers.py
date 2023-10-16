@@ -173,8 +173,6 @@ class CreateRecipeSerializer(serializers.ModelSerializer):
         validated_data = super().validate(self.initial_data)
         ingredients = validated_data.get('ingredients')
         tags_ids = validated_data.get('tags')
-        print(ingredients)
-        print(tags_ids)
         if not tags_ids or not ingredients:
             raise ValidationError("Недостаточно данных.")
         ingredients_list = []
