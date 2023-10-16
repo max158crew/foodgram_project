@@ -199,24 +199,6 @@ class CreateRecipeSerializer(serializers.ModelSerializer):
                 "Время приготовления должно быть не менее 1 минуты!"
             )
         return data
-    #
-    # def validate(self, data):
-    #     validated_data = super().validate(self.initial_data)
-    #     ingredients = validated_data.get('ingredients')
-    #     validated_data['ingredients'] = ingredients
-    #     return validated_data
-
-    #
-    # def create(self, validated_data):
-    #     ingredients = validated_data.pop('ingredients')
-    #     tags_data = validated_data.pop('tags')
-    #     recipe = Recipe.objects.create(**validated_data)
-    #     self.__create_ingredients(recipe, ingredients)
-    #     tags_ids = [tag for tag in tags_data]
-    #     tags = Tag.objects.filter(id__in=tags_ids)
-    #     recipe.tags.set(tags)
-    #     return recipe
-
 
     @transaction.atomic
     def create(self, validated_data):
