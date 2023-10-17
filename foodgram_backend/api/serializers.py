@@ -125,17 +125,6 @@ class CreateIngredientsInRecipeSerializer(serializers.ModelSerializer):
     id = serializers.PrimaryKeyRelatedField(
         source="ingredient", queryset=Ingredient.objects.all())
 
-    def validate_quantity(self, data):
-        """ Проверка введенного количества ингредиента."""
-        try:
-            quantity = float(data)
-            if quantity < 0.001:
-                raise serializers.ValidationError(
-                    "Ингредиента должно быть не менее 0.001.")
-        except ValueError:
-            raise serializers.ValidationError("Неверный вес")
-        return data
-
     def create(self, validated_data):
 
         return IngredientRecipe.objects.create(

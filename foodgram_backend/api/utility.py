@@ -10,13 +10,14 @@ def download_shopping_list(request):
         recipe__shopping_cart__user=request.user
     ).values(
         'ingredient__name', 'ingredient__measurement_unit'
-    ).annotate(amount=Sum('amount'))
-    for num, i in enumerate(ingredients):
+    ).annotate(ingredient_amount=Sum('amount'))
+    for ing_nums, ingredient in enumerate(ingredients):
         ingredient_list += (
-            f"\n{i['ingredient__name']} - "
-            f"{i['amount']} {i['ingredient__measurement_unit']}"
+            f"\n{ingredient['ingredient__name']} - "
+            f"{ingredient['ingredient_amount']} "
+            f"{ingredient['ingredient__measurement_unit']}"
         )
-        if num < ingredients.count() - 1:
+        if ing_nums < ingredients.count() - 1:
             ingredient_list += ', '
     filename = 'shopping_list.txt'
     response = HttpResponse(ingredient_list, content_type='text/plain')
