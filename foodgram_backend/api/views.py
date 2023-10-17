@@ -1,8 +1,8 @@
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets
-from rest_framework.permissions import SAFE_METHODS, IsAuthenticated, \
-    IsAuthenticatedOrReadOnly
+from rest_framework.permissions import (SAFE_METHODS, IsAuthenticated,
+                                        IsAuthenticatedOrReadOnly)
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework import status
@@ -99,14 +99,8 @@ class RecipeViewSet(viewsets.ModelViewSet):
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-    @action(detail=True, methods=['POST'])
-    def shopping_cart(self, request, pk):
-        return self.__post_method_for_actions(
-            request, pk, serializers=ShoppingCartSerializer
-        )
-
-    @shopping_cart.mapping.delete
-    def delete_shopping_cart(self, request, pk):
+    @staticmethod
+    def __delete_method_for_actions(request, pk, model):
         recipe = get_object_or_404(Recipe, id=pk)
         if ShoppingCart.objects.filter(
                 user=request.user, recipe=recipe
@@ -116,6 +110,30 @@ class RecipeViewSet(viewsets.ModelViewSet):
             ).delete()
             return Response(status=status.HTTP_204_NO_CONTENT)
         return Response(status=status.HTTP_400_BAD_REQUEST)
+
+    @action(detail=True, methods=['POST'])
+    def shopping_cart(self, request, pk):
+        return self.__post_method_for_actions(
+            request, pk, serializers=ShoppingCartSerializer
+        )
+
+    @shopping_cart.mapping.delete
+    def delete_shopping_cart(self, request, pk):
+        return self.__delete_method_for_actions(
+            request=request, pk=pk, model=ShoppingCart
+        )
+
+    # @shopping_cart.mapping.delete
+    # def delete_shopping_cart(self, request, pk):
+    #     recipe = get_object_or_404(Recipe, id=pk)
+    #     if ShoppingCart.objects.filter(
+    #             user=request.user, recipe=recipe
+    #     ).exists():
+    #         ShoppingCart.objects.filter(
+    #             user=request.user, recipe=recipe
+    #         ).delete()
+    #         return Response(status=status.HTTP_204_NO_CONTENT)
+    #     return Response(status=status.HTTP_400_BAD_REQUEST)
 
     @action(
         detail=False, methods=['GET'], permission_classes=(IsAuthenticated,)

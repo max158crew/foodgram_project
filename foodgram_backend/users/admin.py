@@ -6,10 +6,9 @@ from .models import Follow, User
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
 
-    list_display = ("role", "username", "email", "first_name", "last_name")
+    list_display = ("username", "email", "first_name", "last_name")
     list_display_links = ("username",)
     search_fields = (
-        "role",
         "username",
     )
     list_filter = (
