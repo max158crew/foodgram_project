@@ -110,7 +110,6 @@ class RecipeViewSet(viewsets.ModelViewSet):
             return Response(status=status.HTTP_204_NO_CONTENT)
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
-
     @action(detail=True, methods=['POST'])
     def shopping_cart(self, request, pk):
         return self.__post_method_for_actions(
