@@ -229,7 +229,7 @@ class CreateRecipeSerializer(serializers.ModelSerializer):
         )
 
 
-class FollowersSerializer(serializers.ModelSerializer):
+class FollowersSerializer(UsersSerializer):
 
     recipes = serializers.SerializerMethodField()
     recipes_count = serializers.SerializerMethodField()
@@ -252,11 +252,6 @@ class FollowersSerializer(serializers.ModelSerializer):
             context={'request': queryset}
         ).data
 
-    def get_is_subscribed(self, author):
-        return Follow.objects.filter(
-            user=self.context.get('request').user,
-            author=author
-        ).exists()
 
     class Meta:
         model = User
