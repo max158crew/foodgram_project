@@ -123,18 +123,6 @@ class RecipeViewSet(viewsets.ModelViewSet):
             request=request, pk=pk, model=ShoppingCart
         )
 
-    # @shopping_cart.mapping.delete
-    # def delete_shopping_cart(self, request, pk):
-    #     recipe = get_object_or_404(Recipe, id=pk)
-    #     if ShoppingCart.objects.filter(
-    #             user=request.user, recipe=recipe
-    #     ).exists():
-    #         ShoppingCart.objects.filter(
-    #             user=request.user, recipe=recipe
-    #         ).delete()
-    #         return Response(status=status.HTTP_204_NO_CONTENT)
-    #     return Response(status=status.HTTP_400_BAD_REQUEST)
-
     @action(
         detail=False, methods=['GET'], permission_classes=(IsAuthenticated,)
     )

@@ -6,20 +6,12 @@ from django.db import models
 
 class User(AbstractUser):
     """Модель пользователя с правами пользователя и администратора"""
-    # USER = "user"
-    # ADMIN = "admin"
-    # ROLES = (
-    #     (USER, "user"),
-    #     (ADMIN, "admin"),
-    # )
     username = models.CharField(max_length=150, unique=True,
                                 validators=[UnicodeUsernameValidator()],
                                 verbose_name="Логин")
     email = models.EmailField(unique=True, verbose_name="E-mail")
     first_name = models.CharField(max_length=150, verbose_name="Имя")
     last_name = models.CharField(max_length=150, verbose_name="Фамилия")
-    # role = models.CharField(max_length=30, choices=ROLES,
-    #                         default=USER, verbose_name="Роль")
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ["username", "first_name", "last_name"]
 
