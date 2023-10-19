@@ -102,14 +102,14 @@ class RecipeViewSet(viewsets.ModelViewSet):
     @staticmethod
     def __delete_method_for_actions(request, pk, model):
         recipe = get_object_or_404(Recipe, id=pk)
-        if ShoppingCart.objects.filter(
-                user=request.user, recipe=recipe
-        ).exists():
-            ShoppingCart.objects.filter(
-                user=request.user, recipe=recipe
-            ).delete()
+        model_instance = model.objects.filter(
+            user=request.user, recipe=recipe
+        )
+        if model_instance.exists():
+            model_instance.delete()
             return Response(status=status.HTTP_204_NO_CONTENT)
         return Response(status=status.HTTP_400_BAD_REQUEST)
+
 
     @action(detail=True, methods=['POST'])
     def shopping_cart(self, request, pk):
@@ -137,11 +137,5 @@ class RecipeViewSet(viewsets.ModelViewSet):
 
     @favorite.mapping.delete
     def delete_favorite(self, request, pk):
-        recipe = get_object_or_404(Recipe, id=pk)
-        if Favorite.objects.filter(
-                user=request.user, recipe=recipe
-        ).exists():
-            Favorite.objects.filter(user=request.user, recipe=recipe
-                                    ).delete()
-            return Response(status=status.HTTP_204_NO_CONTENT)
-        return Response(status=status.HTTP_400_BAD_REQUEST)
+        return self.__delete_method_for_actions(
+            request=request, pk=pk, model=Favorite)
