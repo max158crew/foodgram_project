@@ -124,6 +124,19 @@ class CreateIngredientsInRecipeSerializer(serializers.ModelSerializer):
 
     id = serializers.PrimaryKeyRelatedField(
         source="ingredient", queryset=Ingredient.objects.all())
+    amount = serializers.FloatField()
+
+    def validate_amount(self, data):
+        """ Проверка введенного количества ингредиента."""
+        try:
+            quantity = float(data)
+            if quantity < 0.001:
+                raise serializers.ValidationError(
+                    "Ингредиента должно быть не менее 0.001."
+                )
+        except ValueError:
+            raise serializers.ValidationError("Неверный вес")
+        return data
 
     def create(self, validated_data):
 
@@ -159,19 +172,17 @@ class CreateRecipeSerializer(serializers.ModelSerializer):
         ])
 
     def validate(self, data):
-        validated_data = super().validate(self.initial_data)
-        ingredients = validated_data.get('ingredients')
-        tags_ids = validated_data.get('tags')
+        ingredients = data.get('ingredients')
+        tags_ids = data.get('tags')
         if not tags_ids or not ingredients:
             raise ValidationError("Недостаточно данных.")
         ingredients_list = []
         for ingredient in ingredients:
-            ingredient_id = ingredient.get('id')
-            if ingredient_id in ingredients_list:
+            if ingredient in ingredients_list:
                 raise ValidationError(
                     "Есть задублированные ингредиенты!"
                 )
-            ingredients_list.append(ingredient_id)
+            ingredients_list.append(ingredient)
 
         tags_list = []
         for tag in tags_ids:
@@ -251,7 +262,6 @@ class FollowersSerializer(UsersSerializer):
             many=True,
             context={'request': queryset}
         ).data
-
 
     class Meta:
         model = User
