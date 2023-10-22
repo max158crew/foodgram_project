@@ -1,5 +1,5 @@
 
-Cайт [Foodgram](https://yandexmax.ddns.net/recipes), Продуктовый помощник с возможностью размещать рецепты пользователей, подписываться на других авторов, добавлять список ингредиентов выбранного рецепта в корзину, скачивать список ингредиентов из корзины. 
+Cайт [Foodgram](https://yandexmax.ddns.net), Продуктовый помощник с возможностью размещать рецепты пользователей, подписываться на других авторов, добавлять список ингредиентов выбранного рецепта в корзину, скачивать список ингредиентов из корзины. 
 ## Использованные технологии
 
 ![Python](https://img.shields.io/badge/Python-3.7-3776AB?logo=Python&style=flat-square)
@@ -54,7 +54,6 @@ docker compose up
 docker compose exec backend python manage.py makemigrations
 docker compose exec backend python manage.py migrate
 docker compose exec backend python manage.py collectstatic 
-docker compose exec backend cp -r /app/collected_static/. /backend_static/static/ 
 ```
 Заполнить базу данными
 ```
